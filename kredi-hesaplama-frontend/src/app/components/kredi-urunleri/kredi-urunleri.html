@@ -1,0 +1,125 @@
+<div class="kredi-urunleri-container">
+  <div class="header">
+    <h2>Kredi Ürünleri Yönetimi</h2>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Ürün Ekleme/Düzenleme Formu -->
+  <div class="form-section">
+    <h3>{{ isEditing() ? 'Ürün Düzenle' : 'Yeni Ürün Ekle' }}</h3>
+    
+    <form [formGroup]="urunForm" (ngSubmit)="isEditing() ? updateUrun() : addUrun()" class="urun-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="urunAdi">Ürün Adı:</label>
+          <input type="text" id="urunAdi" formControlName="urunAdi" class="form-control" placeholder="Ürün adını giriniz">
+          <div *ngIf="urunForm.get('urunAdi')?.invalid && urunForm.get('urunAdi')?.touched" class="error-message">
+            Ürün adı gereklidir.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="faizOrani">Faiz Oranı (%):</label>
+          <input type="number" id="faizOrani" formControlName="faizOrani" class="form-control" placeholder="Faiz oranını giriniz" step="0.01">
+          <div *ngIf="urunForm.get('faizOrani')?.invalid && urunForm.get('faizOrani')?.touched" class="error-message">
+            Faiz oranı 0-100 arasında olmalıdır.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="minTutar">Minimum Tutar (TL):</label>
+          <input type="number" id="minTutar" formControlName="minTutar" class="form-control" placeholder="Minimum tutarı giriniz">
+          <div *ngIf="urunForm.get('minTutar')?.invalid && urunForm.get('minTutar')?.touched" class="error-message">
+            Minimum tutar 0'dan büyük olmalıdır.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="maxTutar">Maksimum Tutar (TL):</label>
+          <input type="number" id="maxTutar" formControlName="maxTutar" class="form-control" placeholder="Maksimum tutarı giriniz">
+          <div *ngIf="urunForm.get('maxTutar')?.invalid && urunForm.get('maxTutar')?.touched" class="error-message">
+            Maksimum tutar 0'dan büyük olmalıdır.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="minVade">Minimum Vade (Ay):</label>
+          <input type="number" id="minVade" formControlName="minVade" class="form-control" placeholder="Minimum vadeyi giriniz">
+          <div *ngIf="urunForm.get('minVade')?.invalid && urunForm.get('minVade')?.touched" class="error-message">
+            Minimum vade 1-120 ay arasında olmalıdır.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="maxVade">Maksimum Vade (Ay):</label>
+          <input type="number" id="maxVade" formControlName="maxVade" class="form-control" placeholder="Maksimum vadeyi giriniz">
+          <div *ngIf="urunForm.get('maxVade')?.invalid && urunForm.get('maxVade')?.touched" class="error-message">
+            Maksimum vade 1-120 ay arasında olmalıdır.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="urunForm.invalid" class="btn btn-primary">
+          {{ isEditing() ? 'Güncelle' : 'Ekle' }}
+        </button>
+        <button *ngIf="isEditing()" type="button" (click)="cancelEdit()" class="btn btn-secondary">
+          İptal
+        </button>
+        <button type="button" (click)="resetForm()" class="btn btn-clear">
+          Temizle
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Ürün Listesi -->
+  <div class="list-section">
+    <h3>Mevcut Ürünler</h3>
+    
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Ürünler yükleniyor...</p>
+    </div>
+
+    <div *ngIf="!loading && krediUrunleri.length === 0" class="empty-state">
+      <p>Henüz kredi ürünü eklenmemiş.</p>
+    </div>
+
+    <div *ngIf="!loading && krediUrunleri.length > 0" class="urun-grid">
+      <div *ngFor="let urun of krediUrunleri" class="urun-card">
+        <div class="card-header">
+          <h4>{{ urun.urunAdi }}</h4>
+          <div class="actions">
+            <button (click)="editUrun(urun)" class="btn btn-edit">Düzenle</button>
+            <button (click)="deleteUrun(urun.id!)" class="btn btn-delete">Sil</button>
+          </div>
+        </div>
+        
+        <div class="card-content">
+          <div class="info-row">
+            <span class="label">Faiz Oranı:</span>
+            <span class="value">%{{ urun.faizOrani }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Tutar Aralığı:</span>
+            <span class="value">{{ urun.minTutar | currency:'TRY':'symbol':'1.0-0' }} - {{ urun.maxTutar | currency:'TRY':'symbol':'1.0-0' }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Vade Aralığı:</span>
+            <span class="value">{{ urun.minVade }} - {{ urun.maxVade }} ay</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

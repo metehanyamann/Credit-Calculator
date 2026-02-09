@@ -1,0 +1,122 @@
+<div class="hesaplama-container">
+  <div class="form-card">
+    <h2>Kredi Hesaplama Formu</h2>
+    
+    <form [formGroup]="hesaplamaForm" (ngSubmit)="hesapla()" class="hesaplama-form">
+      <div class="form-group">
+        <label for="krediTipi">Kredi Türü:</label>
+        <select id="krediTipi" formControlName="krediTipi" class="form-control">
+          <option value="">Kredi türü seçiniz</option>
+          <option *ngFor="let tur of krediTurleri" [value]="tur.value">
+            {{ tur.ad }}
+          </option>
+        </select>
+        <div *ngIf="hesaplamaForm.get('krediTipi')?.invalid && hesaplamaForm.get('krediTipi')?.touched" class="error-message">
+          Kredi türü seçilmelidir.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tutar">Kredi Tutarı (TL):</label>
+        <input 
+          type="number" 
+          id="tutar" 
+          formControlName="tutar" 
+          class="form-control"
+          [min]="getTutarLimits().min"
+          [max]="getTutarLimits().max"
+          placeholder="Tutar giriniz">
+        <div *ngIf="hesaplamaForm.get('tutar')?.invalid && hesaplamaForm.get('tutar')?.touched" class="error-message">
+          Geçerli bir tutar giriniz ({{ getTutarLimits().min | number }} - {{ getTutarLimits().max | number }} TL).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="vade">Vade (Ay):</label>
+        <input 
+          type="number" 
+          id="vade" 
+          formControlName="vade" 
+          class="form-control"
+          [min]="getVadeLimits().min"
+          [max]="getVadeLimits().max"
+          placeholder="Vade giriniz">
+        <div *ngIf="hesaplamaForm.get('vade')?.invalid && hesaplamaForm.get('vade')?.touched" class="error-message">
+          Geçerli bir vade giriniz ({{ getVadeLimits().min }} - {{ getVadeLimits().max }} ay).
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="faizOrani">
+        <label>Faiz Oranı (%):</label>
+        <div class="faiz-display">{{ faizOrani }}%</div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="hesaplamaForm.invalid || loading" class="btn-primary">
+          <span *ngIf="loading">Hesaplanıyor...</span>
+          <span *ngIf="!loading">Hesapla</span>
+        </button>
+        <button type="button" (click)="resetForm()" class="btn-secondary">Temizle</button>
+      </div>
+    </form>
+
+    <div *ngIf="hata" class="error-alert">
+      {{ hata }}
+    </div>
+
+    <div *ngIf="sonuc" class="sonuc-card">
+      <h3>Hesaplama Sonucu</h3>
+      <div class="sonuc-grid">
+        <div class="sonuc-item">
+          <span class="label">Aylık Taksit:</span>
+          <span class="value">{{ sonuc.aylikOdeme | number:'1.2-2' }} TL</span>
+        </div>
+        <div class="sonuc-item">
+          <span class="label">Toplam Geri Ödeme:</span>
+          <span class="value">{{ sonuc.toplamOdeme | number:'1.2-2' }} TL</span>
+        </div>
+        <div class="sonuc-item">
+          <span class="label">Toplam Faiz:</span>
+          <span class="value">{{ (sonuc.toplamOdeme - sonuc.tutar) | number:'1.2-2' }} TL</span>
+        </div>
+        <div class="sonuc-item">
+          <span class="label">Faiz Oranı:</span>
+          <span class="value">{{ sonuc.faiz }}%</span>
+        </div>
+      </div>
+
+      <div *ngIf="odemePlani.length > 0" class="odeme-plani">
+        <h4>Ödeme Planı</h4>
+        <div class="table-container">
+          <table class="odeme-table">
+            <thead>
+              <tr>
+                <th>Taksit No</th>
+                <th>Taksit Tutarı</th>
+                <th>Ana Para</th>
+                <th>Faiz</th>
+                <th>Kalan Ana Para</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let taksit of odemePlani">
+                <td>{{ taksit.Ay }}</td>
+                <td>{{ taksit.Tutar | number:'1.2-2' }} TL</td>
+                <td>{{ taksit.Anapara | number:'1.2-2' }} TL</td>
+                <td>{{ taksit.Faiz | number:'1.2-2' }} TL</td>
+                <td>{{ taksit.KalanAnaP | number:'1.2-2' }} TL</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌟 Gemini Yanıtı -->
+    <div *ngIf="groqYanit" class="gemini-yanit">
+      <p>{{ groqYanit }}</p>
+    </div>
+
+
+  </div>
+</div>

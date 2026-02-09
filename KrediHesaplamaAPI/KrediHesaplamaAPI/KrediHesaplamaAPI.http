@@ -1,0 +1,6 @@
+@KrediHesaplamaAPI_HostAddress = http://localhost:5090
+
+GET {{KrediHesaplamaAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

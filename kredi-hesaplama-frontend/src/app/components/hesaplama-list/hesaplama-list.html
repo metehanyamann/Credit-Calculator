@@ -1,0 +1,63 @@
+<div class="hesaplama-list-container">
+  <div class="list-header">
+    <h2>Hesaplama Geçmişi</h2>
+    <button (click)="loadHesaplamalar()" class="btn btn-refresh" [disabled]="loading">
+      <span *ngIf="loading">Yükleniyor...</span>
+      <span *ngIf="!loading">Yenile</span>
+    </button>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Hesaplamalar yükleniyor...</p>
+  </div>
+
+  <div *ngIf="!loading && hesaplamalar.length === 0" class="empty-state">
+    <p>Henüz hesaplama yapılmamış.</p>
+  </div>
+
+  <div *ngIf="!loading && hesaplamalar.length > 0" class="hesaplama-grid">
+    <div *ngFor="let hesaplama of hesaplamalar" class="hesaplama-card">
+      <div class="card-header">
+        <h3>{{ hesaplama.krediTipi }}</h3>
+        <span class="date">{{ formatDate(hesaplama.hesaplamaTarihi!) }}</span>
+      </div>
+      
+      <div class="card-content">
+        <div class="info-row">
+          <span class="label">Kredi Tutarı:</span>
+          <span class="value">{{ formatCurrency(hesaplama.tutar) }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Vade:</span>
+          <span class="value">{{ hesaplama.vade }} ay</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Faiz Oranı:</span>
+          <span class="value">%{{ hesaplama.faiz }}</span>
+        </div>
+        
+        <div class="info-row highlight">
+          <span class="label">Aylık Ödeme:</span>
+          <span class="value">{{ formatCurrency(hesaplama.aylikOdeme) }}</span>
+        </div>
+        
+        <div class="info-row highlight">
+          <span class="label">Toplam Ödeme:</span>
+          <span class="value">{{ formatCurrency(hesaplama.toplamOdeme) }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Toplam Faiz:</span>
+          <span class="value">{{ formatCurrency(hesaplama.toplamOdeme - hesaplama.tutar) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

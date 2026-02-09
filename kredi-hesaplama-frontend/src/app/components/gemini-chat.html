@@ -1,0 +1,43 @@
+<div class="chat-widget" [class.open]="isOpen">
+  <button class="chat-toggle" (click)="toggleChat()">💬</button>
+  <div class="chat-box" *ngIf="isOpen">
+    <div class="chat-header">
+      Kredi Asistanı
+      <button (click)="toggleChat()">✖</button>
+    </div>
+    <div class="chat-messages">
+      <div *ngFor="let msg of messages" [class.user]="msg.sender === 'user'" [class.ai]="msg.sender === 'ai'">
+        <div class="message-text">{{ msg.text }}</div>
+        
+        <!-- Vade hesaplama sonuçları için özel görünüm -->
+        <div *ngIf="msg.isKrediHesaplama && msg.krediData && msg.krediData.basarili" class="kredi-sonuc">
+          <div class="kredi-detay">
+            <h4>{{ msg.krediData.krediTipi }}</h4>
+            <div class="kredi-bilgi">
+              <div class="bilgi-satir">
+                <span class="etiket">Optimal Vade:</span>
+                <span class="deger">{{ msg.krediData.optimalVade }} ay</span>
+              </div>
+              <div class="bilgi-satir">
+                <span class="etiket">Aylık Taksit:</span>
+                <span class="deger">{{ msg.krediData.aylikTaksit | number:'1.2-2' }} TL</span>
+              </div>
+              <div class="bilgi-satir">
+                <span class="etiket">Toplam Ödeme:</span>
+                <span class="deger">{{ msg.krediData.toplamOdeme | number:'1.2-2' }} TL</span>
+              </div>
+              <div class="bilgi-satir">
+                <span class="etiket">Faiz Oranı:</span>
+                <span class="deger">%{{ msg.krediData.faizOrani }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input [(ngModel)]="newMessage" (keydown.enter)="sendMessage()" placeholder="Örnek: Aylık 8000 TL gelirim var, 500000 TL konut kredisi çekmek istiyorum..." />
+      <button (click)="sendMessage()">Gönder</button>
+    </div>
+  </div>
+</div>

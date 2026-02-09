@@ -1,0 +1,125 @@
+.chat-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  .chat-toggle {
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .chat-box {
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .chat-header {
+    background: #6366f1;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+
+    .message {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: #e0e7ff;
+      align-self: flex-end;
+    }
+
+    .ai {
+      background: #f3f4f6;
+      align-self: flex-start;
+    }
+
+    .message-text {
+      margin-bottom: 8px;
+    }
+
+    .kredi-sonuc {
+      margin-top: 10px;
+      
+      .kredi-detay {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+        
+        h4 {
+          margin: 0 0 10px 0;
+          color: #1e40af;
+          font-size: 14px;
+          font-weight: 600;
+        }
+        
+        .kredi-bilgi {
+          .bilgi-satir {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+            
+            .etiket {
+              color: #64748b;
+              font-weight: 500;
+            }
+            
+            .deger {
+              color: #1e293b;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .chat-input {
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+
+    input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 12px;
+    }
+
+    button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  }
+}
