@@ -68,7 +68,7 @@ Credit-Calculator/
     ├── KrediHesaplama.Application/  # Business logic
     └── KrediHesaplama.Infrastructure/  # Data access
 ```
-
+You should add your own API key.
 ## License
 
 MIT
